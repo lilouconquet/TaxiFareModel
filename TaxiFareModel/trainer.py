@@ -1,4 +1,5 @@
 # imports
+
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
@@ -9,6 +10,10 @@ from TaxiFareModel.encoders import TimeFeaturesEncoder
 from sklearn.model_selection import train_test_split
 from TaxiFareModel.utils import compute_rmse
 from TaxiFareModel.data import clean_data, get_data
+from memoized_property import memoized_property
+import mlflow
+from mlflow.tracking import MlflowClient
+
 
 class Trainer():
     def __init__(self, X, y):
@@ -50,6 +55,31 @@ class Trainer():
         rmse=compute_rmse(y_pred, y_test)
         return rmse
 
+    MLFLOW_URI = "https://mlflow.lewagon.co/"
+    EXPERIMENT_NAME='[FR][Paris][lilouconquet] TaxiFareModel 1.0'
+
+    @memoized_property
+    def mlflow_client(self):
+        mlflow.set_tracking_uri(self.MLFLOW_URI)
+        return MlflowClient()
+
+    @memoized_property
+    def mlflow_experiment_id(self):
+        try:
+            return self.mlflow_client.create_experiment(self.EXPERIMENT_NAME)
+        except BaseException:
+            return self.mlflow_client.get_experiment_by_name(self.EXPERIMENT_NAME).experiment_id
+
+    @memoized_property
+    def mlflow_run(self):
+        return self.mlflow_client.create_run(self.mlflow_experiment_id)
+
+    def mlflow_log_param(self, key, value):
+        self.mlflow_client.log_param(self.mlflow_run.info.run_id, key, value)
+
+    def mlflow_log_metric(self, key, value):
+        self.mlflow_client.log_metric(self.mlflow_run.info.run_id, key, value)
+
 
 if __name__ == "__main__":
     # get data
@@ -66,3 +96,6 @@ if __name__ == "__main__":
     trainer.run()
     # evaluate
     rmse=trainer.evaluate(X_val, y_val)
+    #
+    trainer.mlflow_log_metric("rmse", rmse)
+    trainer.mlflow_log_param("model", 'Linear Regression')

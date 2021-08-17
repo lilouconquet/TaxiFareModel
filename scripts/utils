@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+def compute_rmse(y_pred, y_true):
+    return np.sqrt(((y_pred - y_true) ** 2).mean())
+
+if __name__=='__main__':
+    df =get_data()
+    distance=haversine_vectorized(df)

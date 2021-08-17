@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/lilouconquet/code/lilouconquet/TaxiFareModel/mlruns/1/e435147cff464633b7ff458996d20622/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '1'
+lifecycle_stage: active
+name: ''
+run_id: e435147cff464633b7ff458996d20622
+run_uuid: e435147cff464633b7ff458996d20622
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1629207384121
+status: 1
+tags: []
+user_id: unknown
