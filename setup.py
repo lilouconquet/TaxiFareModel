@@ -13,5 +13,5 @@ setup(name='TaxiFareModel',
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,
-      scripts=['scripts/TaxiFareModel-run'],
+      scripts=['scripts/TaxiFareModel-run', 'scripts/data', 'scripts/trainer', 'scripts/utils', 'scripts/encoders'],
       zip_safe=False)
